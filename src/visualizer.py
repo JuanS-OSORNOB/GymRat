@@ -1,7 +1,24 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-class Visualizer:
+
+class BodyVisualizer:
+    def __init__(self, df):
+        self.df = df
+    
+    def plot_weight_change(self):
+        plt.figure(figsize=(10, 5))
+        plt.plot(self.df["date"], self.df["weight"], marker = 'o', linestyle = '-', color = 'dodgerblue')
+        #plt.gcf().autofmt_xdate()
+        plt.xticks(self.df["date"][::7])
+        plt.title("Weight over time")
+        plt.xlabel("Date")
+        plt.ylabel("Weight (kg)")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+
+class GymVisualizer:
     def __init__(self, data):
         self.data = data
 
