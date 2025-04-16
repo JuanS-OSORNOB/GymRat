@@ -1,19 +1,26 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+import re
 
 class BodyVisualizer:
-    def __init__(self, df):
+    def __init__(self, df, recordtype):
         self.df = df
+        self.recordtype = recordtype
+
+    def prettify(self):
+        cleaned = re.sub(r'^HK.*?Identifier', '', self.recordtype)  # remove everything up to "Identifier"
+        return re.sub(r'(?<!^)(?=[A-Z])', ' ', cleaned).strip()
+
     
-    def plot_weight_change(self):
+    def plot_recordtype_change(self):
         plt.figure(figsize=(10, 5))
-        plt.plot(self.df["date"], self.df["weight"], marker = 'o', linestyle = '-', color = 'dodgerblue')
+        plt.plot(self.df["date"], self.df["recordtype"], marker = 'o', linestyle = '-', color = 'dodgerblue')
         #plt.gcf().autofmt_xdate()
         plt.xticks(self.df["date"][::7])
-        plt.title("Weight over time")
+        pretty_title = self.prettify()
+        plt.title(f"{pretty_title} over time")
         plt.xlabel("Date")
-        plt.ylabel("Weight (kg)")
+        plt.ylabel(pretty_title)
         plt.grid(True)
         plt.tight_layout()
         plt.show()

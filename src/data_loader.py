@@ -19,14 +19,19 @@ class BodyDataLoader:
     def __init__(self, xml_path):
         self.xml_path = xml_path
 
-    def load_applehealth(self):
+    def load_applehealth(self, recordtype):
         tree = ET.parse(self.xml_path)
         root = tree.getroot()
         records = []
+        types = set()
         for record in root.findall("Record"):
-            if record.attrib.get("type") == "HKQuantityTypeIdentifierBodyMass":
-                records.append({"date":record.attrib.get("startDate"), "weight":record.attrib.get("value")})
+            types.add(record.attrib.get("type"))
+            if record.attrib.get("type") == recordtype:
+                records.append({"date":record.attrib.get("startDate"), "recordtype":record.attrib.get("value")})
         
+        print("Types are:")
+        for i, t in enumerate(sorted(types)):
+            print(f"{i}) {t}")
         df = pd.DataFrame(records)
         df.sort_values("date", inplace=True)
         df.reset_index(drop=True, inplace=True)
